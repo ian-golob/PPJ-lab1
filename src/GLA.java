@@ -11,6 +11,7 @@ public class GLA {
     Map<String, String> regexNameToDefMap;
     List<String> analyzerStates;
     List<String> lexicalElementNames;
+    Map<String, List<EpsilonNKA>> stateToENKAMap;
 
     public static void main(String... args) throws FileNotFoundException {
         parseInput(new FileInputStream("./data/minusLang.txt"), System.out);
@@ -41,7 +42,7 @@ public class GLA {
             System.out.println(regexName + " -> " + regexDef);
 
 
-            regexDef = simplifyRegex(regexDef);
+            regexDef = RegexUtil.simplifyRegex(regexDef, regexNameToDefMap);
 
 
             System.out.println(regexName + " -> " + regexDef);
@@ -80,7 +81,7 @@ public class GLA {
 
             String stateName = firstLine.substring(1, firstLine.indexOf(">"));
             String regexDef = firstLine.substring(firstLine.indexOf(">") + 1);
-            regexDef = simplifyRegex(regexDef);
+            regexDef = RegexUtil.simplifyRegex(regexDef, regexNameToDefMap);
 
             System.out.print(stateName + " " + regexDef + " ---> ");
 
@@ -94,36 +95,5 @@ public class GLA {
             sc.nextLine(); // }
         }
         System.out.println("---------------------------- pravila gotova ----------------------------");
-    }
-
-    //parse regex definition names to regex definitions
-    public String simplifyRegex(String regex){
-        int startPosition = 0;
-        while((startPosition = regex.indexOf("{", startPosition) + 1) > 0 ){
-            if(isOperator(regex, startPosition - 1)){
-                int endPosition = regex.indexOf('}', startPosition);
-
-                String regexDefSubstring = regex.substring(startPosition, endPosition);
-
-                String newRegex = regex;
-                do{
-                    regex = newRegex;
-                    newRegex = regex.replace("{" + regexDefSubstring + "}", "(" + regexNameToDefMap.get(regexDefSubstring) + ")");
-                }while(!regex.equals(newRegex));
-            }
-        }
-        return regex;
-    }
-
-    public static boolean isOperator(String s, int position){
-        boolean result = true;
-        for(int i = position - 1; i >= 0; i--){
-            if(s.charAt(i) == '\\'){
-                result = !result;
-            }else{
-                return result;
-            }
-        }
-        return result;
     }
 }
