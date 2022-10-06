@@ -1,3 +1,5 @@
+package main;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +106,7 @@ public class RegexUtil {
                         }
                     }else{
                         //case 2b
-                        int j = regex.indexOf(')', i); //TODO: fix to include actual occurrence
+                        int j = nextBracketClose(regex, i);
                         Pair<Integer, Integer> result = buildENKAFromRegex(regex.substring(i + 1, j), eNKA);
                         a = result.getFirst();
                         b = result.getSecond();
@@ -134,5 +136,19 @@ public class RegexUtil {
             eNKA.addEpsilonTransition(lastState, rightState);
         }
         return new Pair<>(leftState, rightState);
+    }
+
+    public static int nextBracketClose(String s, int fromIndex){
+        int bracketCount = 0;
+        for(int i = fromIndex + 1; i < s.length(); i ++){
+            if(bracketCount == 0 && s.charAt(i) == ')' && isOperator(s, i)){
+                return i;
+            } else if(s.charAt(i) == ')' && isOperator(s, i)){
+                bracketCount--;
+            } else if(s.charAt(i) == '(' && isOperator(s, i)){
+                bracketCount++;
+            }
+        }
+        return -1;
     }
 }

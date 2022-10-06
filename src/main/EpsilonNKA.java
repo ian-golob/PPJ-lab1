@@ -1,3 +1,5 @@
+package main;
+
 import java.util.*;
 
 public class EpsilonNKA {
@@ -6,6 +8,8 @@ public class EpsilonNKA {
     private Integer stateCount;
     private Map<Pair<Integer, Character>,Set<Integer>> transitions;
     private Map<Integer,Set<Integer>> epsilonTransitions;
+    private String lexicalElementName;
+    private List<Action> actions;
 
     private Set<Integer> currentState;
 
@@ -31,12 +35,17 @@ public class EpsilonNKA {
         currentState = new TreeSet<>();
         transitions = new HashMap<>();
         epsilonTransitions = new HashMap<>();
+        actions = new LinkedList<>();
     }
 
     public void resetState(){
         currentState.clear();
         currentState.add(firstState);
         epsilonTransition();
+    }
+
+    public boolean inAcceptableState(){
+        return currentState.contains(acceptableState);
     }
 
     public void goToNextState(Character inputSymbol){
@@ -69,4 +78,67 @@ public class EpsilonNKA {
         }
     }
 
+    public Integer getFirstState() {
+        return firstState;
+    }
+
+    public void setFirstState(Integer firstState) {
+        this.firstState = firstState;
+    }
+
+    public Integer getAcceptableState() {
+        return acceptableState;
+    }
+
+    public void setAcceptableState(Integer acceptableState) {
+        this.acceptableState = acceptableState;
+    }
+
+    public Integer getStateCount() {
+        return stateCount;
+    }
+
+    public void setStateCount(Integer stateCount) {
+        this.stateCount = stateCount;
+    }
+
+    public Map<Pair<Integer, Character>, Set<Integer>> getTransitions() {
+        return transitions;
+    }
+
+    public void setTransitions(Map<Pair<Integer, Character>, Set<Integer>> transitions) {
+        this.transitions = transitions;
+    }
+
+    public Map<Integer, Set<Integer>> getEpsilonTransitions() {
+        return epsilonTransitions;
+    }
+
+    public void setEpsilonTransitions(Map<Integer, Set<Integer>> epsilonTransitions) {
+        this.epsilonTransitions = epsilonTransitions;
+    }
+
+    public Set<Integer> getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(Set<Integer> currentState) {
+        this.currentState = currentState;
+    }
+
+    public String getLexicalElementName() {
+        return lexicalElementName;
+    }
+
+    public void setLexicalElementName(String lexicalElementName) {
+        this.lexicalElementName = lexicalElementName;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
 }
