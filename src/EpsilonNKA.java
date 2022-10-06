@@ -1,25 +1,36 @@
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class EpsilonNKA {
-    private final Set<String> stateSet;
-    private final Set<String> symbolSet;
-    private final Set<String> acceptableStateSet ;
-    private final String firstState;
-    private final Map<List<String>,Set<String>> transition;
-    private Set<String> currentState;
-    private String stateHistory;
+    private Integer firstState;
+    private Integer acceptableState;
+    private Integer stateCount;
+    private Map<Pair<Integer, Character>,Set<Integer>> transitions;
+    private Map<Integer,Set<Integer>> epsilonTransitions;
 
-    public EpsilonNKA(Set<String> stateSet, Set<String> symbolSet, Set<String> acceptableStateSet, String firstState, Map<List<String>, Set<String>> transition) {
-        this.stateSet = stateSet;
-        this.symbolSet = symbolSet;
-        this.acceptableStateSet = acceptableStateSet;
-        this.firstState = firstState;
-        this.transition = transition;
+    private Set<Integer> currentState;
+
+    public Integer addNewState(){
+        return stateCount++;
+    }
+
+    public void addEpsilonTransition(Integer fromState, Integer toState){
+        epsilonTransitions.put(fromState, epsilonTransitions.getOrDefault(fromState, new HashSet<>()));
+
+        epsilonTransitions.get(fromState).add(toState);
+    }
+
+    public void addTransition(Integer fromState,Character inputCharacter, Integer toState){
+        Pair<Integer, Character> input = new Pair<>(fromState, inputCharacter);
+        transitions.put(input, transitions.getOrDefault(input, new HashSet<>()));
+
+        transitions.get(input).add(toState);
+    }
+
+    public EpsilonNKA() {
+        stateCount = 0;
         currentState = new TreeSet<>();
-        resetState();
+        transitions = new HashMap<>();
+        epsilonTransitions = new HashMap<>();
     }
 
     public void resetState(){
@@ -28,16 +39,14 @@ public class EpsilonNKA {
         epsilonTransition();
     }
 
-    public void goToNextState(String inputSymbol){
-        Set<String> nextState = new TreeSet<>();
+    public void goToNextState(Character inputSymbol){
+        Set<Integer> nextState = new TreeSet<>();
         if(currentState.size()>0){
-            for(String i:currentState){
-                if(transition.containsKey(List.of(i,inputSymbol))){
-                    nextState.addAll(transition.get(List.of(i,inputSymbol)));
-
+            for(Integer i:currentState){
+                if(transitions.containsKey(new Pair<>(i,inputSymbol))){
+                    nextState.addAll(transitions.get(new Pair<>(i,inputSymbol)));
                 }
             }
-            nextState.remove("#");  //remove empty states
         }
         currentState = nextState;
 
@@ -48,16 +57,16 @@ public class EpsilonNKA {
         if(currentState.size()>0){
             int stateNum;
             do{
-                Set<String> epsilonState = new TreeSet<>();
+                Set<Integer> epsilonState = new TreeSet<>();
                 stateNum = currentState.size();
-                for(String i:currentState){
-                    if(transition.containsKey(List.of(i,"$"))) {
-                        epsilonState.addAll(transition.get(List.of(i,"$")));
+                for(Integer i:currentState){
+                    if(epsilonTransitions.containsKey(i)) {
+                        epsilonState.addAll(epsilonTransitions.get(i));
                     }
                 }
                 currentState.addAll(epsilonState);
-                currentState.remove("#"); //remove empty states
             }while(currentState.size()!=stateNum);
         }
     }
+
 }
