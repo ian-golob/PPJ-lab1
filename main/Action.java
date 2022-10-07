@@ -1,8 +1,7 @@
-package main;
-
 import java.io.Serializable;
 
 public class Action implements Serializable {
+    private static final long serialVersionUID = 7526472295622776141L;
     private ActionType actionType;
     private String actionArgument;
 

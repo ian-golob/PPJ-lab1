@@ -1,9 +1,8 @@
-package main;
-
 import java.io.Serializable;
 import java.util.*;
 
 public class EpsilonNKA implements Serializable {
+    private static final long serialVersionUID = 7526472295622776142L;
     private Integer firstState;
     private Integer acceptableState;
     private Integer stateCount;

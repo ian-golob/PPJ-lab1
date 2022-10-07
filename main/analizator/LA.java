@@ -1,8 +1,3 @@
-package main.analizator;
-
-import main.Action;
-import main.EpsilonNKA;
-
 import java.io.*;
 import java.util.*;
 
@@ -30,8 +25,9 @@ public class LA {
         la.analyzeInput(System.in, System.out);
     }
 
+    @SuppressWarnings("unchecked")
     public void readLAConfigObjects() throws IOException, ClassNotFoundException {
-        String pathPrefix = "analizator/";
+        String pathPrefix = "";
 
         String analyzerStatesPath = pathPrefix + "analyzerStates.obj";
         String lexicalElementNamesPath = pathPrefix + "lexicalElementNames.obj";
