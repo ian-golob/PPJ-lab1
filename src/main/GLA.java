@@ -13,16 +13,33 @@ public class GLA {
     private Map<String, List<EpsilonNKA>> stateToENKAListMap = new LinkedHashMap<>();
 
     public static void main(String... args) throws IOException {
-        InputStream in = new FileInputStream("./data/svaki_drugi_a2.lan");
-        PrintStream out = System.out;
-
         GLA gla = new GLA();
-        gla.parseInput(in, out);
-
-        in.close();
+        gla.parseInput(System.in);
+        gla.writeLAConfigObjects();
     }
 
-    public void parseInput(InputStream in, PrintStream out) {
+    public void writeLAConfigObjects() throws IOException {
+        String pathPrefix = "analizator/";
+
+        File analyzerStatesFile = new File(pathPrefix + "analyzerStates.obj");
+        File lexicalElementNamesFile = new File(pathPrefix + "lexicalElementNames.obj");
+        File stateToENKAListMapFile = new File(pathPrefix + "stateToENKAListMap.obj");
+
+        analyzerStatesFile.createNewFile();
+        lexicalElementNamesFile.createNewFile();
+        stateToENKAListMapFile.createNewFile();
+
+        try(ObjectOutputStream analyzerStatesFileOut = new ObjectOutputStream(new FileOutputStream(analyzerStatesFile));
+            ObjectOutputStream lexicalElementNamesFileOut = new ObjectOutputStream(new FileOutputStream(lexicalElementNamesFile));
+            ObjectOutputStream stateToENKAListMapFileOut = new ObjectOutputStream(new FileOutputStream(stateToENKAListMapFile))){
+
+            analyzerStatesFileOut.writeObject(analyzerStates);
+            lexicalElementNamesFileOut.writeObject(lexicalElementNames);
+            stateToENKAListMapFileOut.writeObject(stateToENKAListMap);
+        }
+    }
+
+    public void parseInput(InputStream in) {
         Scanner sc = new Scanner(in);
 
         inputRegexDefinitions(sc);

@@ -1,8 +1,9 @@
 package main;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class EpsilonNKA {
+public class EpsilonNKA implements Serializable {
     private Integer firstState;
     private Integer acceptableState;
     private Integer stateCount;

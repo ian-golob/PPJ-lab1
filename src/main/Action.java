@@ -2,7 +2,7 @@ package main;
 
 import java.io.Serializable;
 
-public class Action {
+public class Action implements Serializable {
     private ActionType actionType;
     private String actionArgument;
 

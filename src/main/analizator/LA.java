@@ -3,28 +3,47 @@ package main.analizator;
 import main.Action;
 import main.EpsilonNKA;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 
 //leksicki analizator
 public class LA {
 
     private String currentState;
+    private List<String> analyzerStates;
+    private List<String> lexicalElementNames;
+    private Map<String, List<EpsilonNKA>> stateToENKAListMap;
 
-    public static void main(String... args){
+    public LA(){
 
     }
-
-    private final List<String> analyzerStates;
-    private final List<String> lexicalElementNames;
-    private final Map<String, List<EpsilonNKA>> stateToENKAListMap;
 
     public LA(List<String> analyzerStates, List<String> lexicalElementNames, Map<String, List<EpsilonNKA>> stateToENKAListMap) {
         this.analyzerStates = analyzerStates;
         this.lexicalElementNames = lexicalElementNames;
         this.stateToENKAListMap = stateToENKAListMap;
+    }
+
+    public static void main(String... args) throws IOException, ClassNotFoundException {
+        LA la = new LA();
+        la.readLAConfigObjects();
+        la.analyzeInput(System.in, System.out);
+    }
+
+    public void readLAConfigObjects() throws IOException, ClassNotFoundException {
+        String pathPrefix = "analizator/";
+
+        String analyzerStatesPath = pathPrefix + "analyzerStates.obj";
+        String lexicalElementNamesPath = pathPrefix + "lexicalElementNames.obj";
+        String stateToENKAListMapPath = pathPrefix + "stateToENKAListMap.obj";
+
+        try(ObjectInputStream analyzerStatesIn = new ObjectInputStream(new FileInputStream(analyzerStatesPath));
+            ObjectInputStream lexicalElementNamesIn = new ObjectInputStream(new FileInputStream(lexicalElementNamesPath));
+            ObjectInputStream stateToENKAListMapIn = new ObjectInputStream(new FileInputStream(stateToENKAListMapPath))){
+            analyzerStates = (List<String>) analyzerStatesIn.readObject();
+            lexicalElementNames = (List<String>) lexicalElementNamesIn.readObject();
+            stateToENKAListMap = (Map<String, List<EpsilonNKA>>) stateToENKAListMapIn.readObject();
+        }
     }
 
     public void analyzeInput(InputStream in, PrintStream out) throws IOException {

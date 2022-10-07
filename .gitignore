@@ -144,3 +144,4 @@ replay_pid*
 
 output.txt
 /test-data/*.my
+*.obj
