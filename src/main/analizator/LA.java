@@ -28,12 +28,15 @@ public class LA {
     }
 
     public void analyzeInput(InputStream in, PrintStream out) throws IOException {
-        StringBuilder input = new StringBuilder();
+        StringBuilder inputBuilder = new StringBuilder();
         int nextChar;
         while((nextChar = in.read()) != -1){
             char c = (char) nextChar;
-            input.append(c);
+            inputBuilder.append(c);
         }
+        String input = inputBuilder.toString()
+                    .replace("\r\n", "\n")
+                    .replace("\r", "\n");
 
         currentState = analyzerStates.get(0);
 
@@ -62,27 +65,27 @@ public class LA {
             }
 
             if(foundAnyMatch){
-
                 EpsilonNKA eNKA = eNKAs.get(eNKAMatchedId);
 
                 int oldNewLineCount = newLineCount;
-                if(!eNKA.getLexicalElementName().equals("-")){
-                    List<Action> actions = eNKA.getActions();
-                    for(Action action: actions){
-                        switch (action.getActionType()){
-                            case NOVI_REDAK:
-                                newLineCount++;
-                                break;
-                            case UDJI_U_STANJE:
-                                currentState = action.getActionArgument();
-                                break;
-                            case VRATI_SE:
-                                lastMatchFoundAt = lastNonParsedCharacterAt + Integer.parseInt(action.getActionArgument()) - 1;
-                                break;
-                        }
+                List<Action> actions = eNKA.getActions();
+                for(Action action: actions){
+                    switch (action.getActionType()){
+                        case NOVI_REDAK:
+                            newLineCount++;
+                            break;
+                        case UDJI_U_STANJE:
+                            currentState = action.getActionArgument();
+                            break;
+                        case VRATI_SE:
+                            lastMatchFoundAt = lastNonParsedCharacterAt + Integer.parseInt(action.getActionArgument()) - 1;
+                            break;
                     }
+                }
+                if(!eNKA.getLexicalElementName().equals("-")){
                     out.println(eNKA.getLexicalElementName() + " " + oldNewLineCount + " " + input.substring(lastNonParsedCharacterAt, lastMatchFoundAt + 1));
                 }
+
                 lastNonParsedCharacterAt = lastMatchFoundAt + 1;
             }else{
                 System.err.print(input.charAt(lastNonParsedCharacterAt));

@@ -1,7 +1,5 @@
 package main;
 
-import main.analizator.LA;
-
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,21 +43,14 @@ public class GLA {
 
             String regexDef = sc.next();
 
-            //System.out.println(regexName + " -> " + regexDef);
-
-
             regexDef = RegexUtil.simplifyRegex(regexDef, regexNameToDefMap);
 
-
-            //System.out.println(regexName + " -> " + regexDef);
             regexNameToDefMap.put(regexName, regexDef);
         }
 
         if(atLeastOneDefinition){
             sc.nextLine();
         }
-
-        //System.out.println("---------------------------- reg definicije gotove ----------------------------");
     }
 
     public void inputAnalyzerStates(Scanner sc){
@@ -69,9 +60,6 @@ public class GLA {
         analyzerStates.remove(0);
 
         analyzerStates.forEach((state) -> stateToENKAListMap.put(state, new LinkedList<>()));
-
-        //System.out.println(analyzerStates);
-        //System.out.println("---------------------------- stanja gotova ----------------------------");
     }
 
     public void inputLexicalElementNames(Scanner sc){
@@ -79,9 +67,6 @@ public class GLA {
 
         lexicalElementNames = Arrays.stream(nextLine.split(" ")).collect(Collectors.toList());
         lexicalElementNames.remove(0);
-
-        //System.out.println(lexicalElementNames);
-        //System.out.println("---------------------------- imena leksičkih jedinki gotova ----------------------------");
     }
 
     public void inputAnalyzerRules(Scanner sc){
@@ -92,11 +77,8 @@ public class GLA {
             String regexDef = firstLine.substring(firstLine.indexOf(">") + 1);
             regexDef = RegexUtil.simplifyRegex(regexDef, regexNameToDefMap);
 
-            //System.out.print(stateName + " " + regexDef + " ---> ");
-
             sc.nextLine(); // {
             String lexicalElementName = sc.nextLine();
-            //System.out.print(" [" + lexicalElementName + "] ");
 
             List<Action> actions = new LinkedList<>();
             while(!sc.hasNext("}.*")) {
@@ -109,10 +91,7 @@ public class GLA {
                 }
 
                 actions.add(action);
-
-                //System.out.print(action.getActionType() + " " + action.getActionArgument() + ", ");
             }
-            //System.out.println();
 
             sc.nextLine(); // }
 
@@ -125,7 +104,6 @@ public class GLA {
 
             stateToENKAListMap.get(stateName).add(eNKA);
         }
-        //System.out.println("---------------------------- pravila gotova ----------------------------");
     }
 
     public Map<String, String> getRegexNameToDefMap() {
